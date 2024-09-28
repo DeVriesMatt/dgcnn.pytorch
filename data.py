@@ -26,10 +26,10 @@ from torch.utils.data import Dataset
 
 def download_modelnet40():
     BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-    DATA_DIR = os.path.join(BASE_DIR, 'data')
+    DATA_DIR = "/mnt/nvme0n1/Datasets/"
     if not os.path.exists(DATA_DIR):
         os.mkdir(DATA_DIR)
-    if not os.path.exists(os.path.join(DATA_DIR, 'modelnet40_ply_hdf5_2048')):
+    if not os.path.exists(os.path.join(DATA_DIR, 'modelnet40_hdf5_2048')):
         www = 'https://shapenet.cs.stanford.edu/media/modelnet40_ply_hdf5_2048.zip'
         zipfile = os.path.basename(www)
         os.system('wget %s --no-check-certificate; unzip %s' % (www, zipfile))
@@ -76,10 +76,10 @@ def download_S3DIS():
 def load_data_cls(partition):
     download_modelnet40()
     BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-    DATA_DIR = os.path.join(BASE_DIR, 'data')
+    DATA_DIR = os.path.join("/mnt/nvme0n1/Datasets/")
     all_data = []
     all_label = []
-    for h5_name in glob.glob(os.path.join(DATA_DIR, 'modelnet40_ply_hdf5_2048', '*%s*.h5'%partition)):
+    for h5_name in glob.glob(os.path.join(DATA_DIR, 'modelnet40_hdf5_2048', '*%s*.h5'%partition)):
         f = h5py.File(h5_name, 'r+')
         data = f['data'][:].astype('float32')
         label = f['label'][:].astype('int64')

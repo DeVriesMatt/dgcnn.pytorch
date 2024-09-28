@@ -22,7 +22,7 @@ import torch.nn.functional as F
 import torch.optim as optim
 from torch.optim.lr_scheduler import CosineAnnealingLR, StepLR
 from data import ModelNet40
-from model import PointNet, DGCNN_cls
+from model import PointNet, DGCNN_cls, DGCNN_cls_conj, DGCNN_cls_add, DGCNN_cls_attn, DGCNN_cls_inst
 import numpy as np
 from torch.utils.data import DataLoader
 from util import cal_loss, IOStream
@@ -52,8 +52,15 @@ def train(args, io):
     #Try to load models
     if args.model == 'pointnet':
         model = PointNet(args).to(device)
-    elif args.model == 'dgcnn':
-        model = DGCNN_cls(args).to(device)
+    elif args.model == 'conjunctive':
+        model = DGCNN_cls_conj(args).to(device)
+    elif args.model == 'additive':
+        model = DGCNN_cls_add(args).to(device)
+    elif args.model == 'attention':
+        model = DGCNN_cls_attn(args).to(device)
+    elif args.model == 'instance':
+        model = DGCNN_cls_inst(args).to(device)
+
     else:
         raise Exception("Not implemented")
 
@@ -95,6 +102,7 @@ def train(args, io):
             loss = criterion(logits, label)
             loss.backward()
             opt.step()
+            print(loss.item())
             preds = logits.max(dim=1)[1]
             count += batch_size
             train_loss += loss.item() * batch_size
@@ -196,7 +204,7 @@ if __name__ == "__main__":
     parser.add_argument('--exp_name', type=str, default='exp', metavar='N',
                         help='Name of the experiment')
     parser.add_argument('--model', type=str, default='dgcnn', metavar='N',
-                        choices=['pointnet', 'dgcnn'],
+                        choices=['pointnet', 'dgcnn', 'conjunctive', 'additive', 'attention', 'instance'],
                         help='Model to use, [pointnet, dgcnn]')
     parser.add_argument('--dataset', type=str, default='modelnet40', metavar='N',
                         choices=['modelnet40'])
