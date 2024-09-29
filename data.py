@@ -26,7 +26,7 @@ from torch.utils.data import Dataset
 
 def download_modelnet40():
     BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-    DATA_DIR = "/mnt/nvme0n1/Datasets/"
+    DATA_DIR = "/data/scratch/DBI/DUDBI/DYNCESYS/mvries/Datasets/MN_new/"
     if not os.path.exists(DATA_DIR):
         os.mkdir(DATA_DIR)
     if not os.path.exists(os.path.join(DATA_DIR, 'modelnet40_hdf5_2048')):
@@ -76,10 +76,10 @@ def download_S3DIS():
 def load_data_cls(partition):
     download_modelnet40()
     BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-    DATA_DIR = os.path.join("/mnt/nvme0n1/Datasets/")
+    DATA_DIR = os.path.join("/data/scratch/DBI/DUDBI/DYNCESYS/mvries/Datasets/MN_new/")
     all_data = []
     all_label = []
-    for h5_name in glob.glob(os.path.join(DATA_DIR, 'modelnet40_hdf5_2048', '*%s*.h5'%partition)):
+    for h5_name in glob.glob(os.path.join(DATA_DIR, 'modelnet40_ply_hdf5_2048', '*%s*.h5'%partition)):
         f = h5py.File(h5_name, 'r+')
         data = f['data'][:].astype('float32')
         label = f['label'][:].astype('int64')

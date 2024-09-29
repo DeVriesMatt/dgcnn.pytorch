@@ -102,7 +102,7 @@ def train(args, io):
             loss = criterion(logits, label)
             loss.backward()
             opt.step()
-            print(loss.item())
+            
             preds = logits.max(dim=1)[1]
             count += batch_size
             train_loss += loss.item() * batch_size
